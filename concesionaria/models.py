@@ -1,22 +1,30 @@
 # concesionaria/models.py
 from django.contrib.auth.models import AbstractUser
+from django.conf import settings
 from django.db import models
 
 class Vendedor(AbstractUser):
-    # El campo username, email y password ya existen por herencia
-    # Podés agregar más si querés:
+    email = models.EmailField(unique=True)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']  
+
     telefono = models.CharField(max_length=20, blank=True)
     fecha_ingreso = models.DateField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.username} ({self.email})"
+        return f"{self.email}"
 
 
 class Cliente(models.Model):
+    usuario = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='perfil_cliente'
+    )
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=50)
     dni = models.CharField(max_length=20, unique=True)
-    email = models.EmailField(unique=True)
     telefono = models.CharField(max_length=20, blank=True)
 
     def __str__(self):
@@ -37,6 +45,13 @@ class Vehiculo(models.Model):
     año = models.PositiveIntegerField()
     precio = models.DecimalField(max_digits=10, decimal_places=2)
     disponible = models.BooleanField(default=True)
+    vendedor = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='vehiculos_cargados'
+    )
 
     def __str__(self):
         return f"{self.marca} {self.modelo} ({self.año})"

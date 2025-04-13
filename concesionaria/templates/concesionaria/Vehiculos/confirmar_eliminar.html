@@ -1,0 +1,16 @@
+
+{% extends 'concesionaria/index.html' %}
+
+{% block titulo %}Confirmar eliminación{% endblock %}
+
+{% block contenido %}
+<div class="container">
+    <h2 class="mb-4 text-danger">¿Estás seguro de que querés eliminar este vehículo?</h2>
+    <p><strong>{{ vehiculo }}</strong></p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+        <a href="{% url 'panel_vendedor' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

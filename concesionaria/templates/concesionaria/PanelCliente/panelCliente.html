@@ -1,0 +1,24 @@
+{% extends 'concesionaria/index.html' %}
+
+{% block titulo %}Panel del Cliente{% endblock %}
+
+{% block contenido %}
+<div class="container">
+    <h2 class="mb-4">Panel del Cliente</h2>
+    <p>Bienvenido, {{ cliente.nombre }} {{ cliente.apellido }}.</p>
+
+    <hr>
+    <h4>🛒 Historial de compras</h4>
+    {% if compras %}
+        <ul class="list-group">
+            {% for venta in compras %}
+                <li class="list-group-item">
+                    Compraste un {{ venta.vehiculo.marca }} {{ venta.vehiculo.modelo }} por ${{ venta.precio_final }} el {{ venta.fecha }}.
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Aún no realizaste ninguna compra.</p>
+    {% endif %}
+</div>
+{% endblock %}

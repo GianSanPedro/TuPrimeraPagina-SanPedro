@@ -4,12 +4,6 @@
 
 {% block contenido %}
 <div class="container">
-    {% if user.is_authenticated %}
-    <div class="mb-3 text-end">
-        <a href="{% url 'crear_vehiculo' %}" class="btn btn-outline-primary">➕ Agregar nuevo vehículo</a>
-    </div>
-    {% endif %}
-
     <h2 class="mb-4 text-center">Catálogo de Vehículos</h2>
 
     <form method="get" class="row mb-4">
@@ -44,6 +38,13 @@
                             <span class="badge bg-danger">No disponible</span>
                         {% endif %}
                     </p>
+
+                    {% if user.is_authenticated and user.perfil_cliente and v.disponible %}
+                    <form method="post" action="{% url 'comprar_vehiculo' v.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success btn-sm mt-2">Comprar</button>
+                    </form>
+                    {% endif %}
                 </div>
             </div>
         </div>

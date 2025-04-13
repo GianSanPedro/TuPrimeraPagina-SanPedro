@@ -1,0 +1,14 @@
+{% extends 'concesionaria/index.html' %}
+
+{% block titulo %}Registro de Cliente{% endblock %}
+
+{% block contenido %}
+<div class="container">
+    <h2 class="mb-4">Registrarse como Cliente</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Registrarse</button>
+    </form>
+</div>
+{% endblock %}
