@@ -1,0 +1,43 @@
+{% extends 'concesionaria/index.html' %}
+
+{% block titulo %}Quiénes Somos - Concesionaria San Pedro{% endblock %}
+
+{% block contenido %}
+<div class="container">
+    <h2 class="text-center mb-4">Nuestra Historia</h2>
+
+    <p class="lead text-center">
+        Fundada en 2003, <strong>Concesionaria San Pedro</strong> nació como un emprendimiento familiar con el sueño de brindar acceso a vehículos de calidad, con atención personalizada y compromiso real con el cliente.
+    </p>
+
+    <p class="text-justify">
+        Con el correr de los años, nos hemos consolidado como una de las concesionarias más confiables de la región. Nuestra filosofía siempre ha sido simple: <em>la satisfacción del cliente por encima de todo</em>. 
+        Desde nuestros inicios en un pequeño local de barrio hasta nuestra sede actual con más de 2.000 m², cada paso fue guiado por la confianza de quienes nos eligen.
+    </p>
+
+    <hr class="my-4">
+
+    <h3 class="text-center">Nuestra Misión</h3>
+    <p class="text-center">Ofrecer soluciones de movilidad accesibles, seguras y confiables para todas las personas, promoviendo una experiencia de compra transparente y cercana.</p>
+
+    <h3 class="text-center mt-5">Nuestros Valores</h3>
+    <div class="row text-center mt-3">
+        <div class="col-md-4">
+            <h5>🚀 Innovación</h5>
+            <p>Buscamos estar siempre a la vanguardia en modelos, tecnologías y servicios.</p>
+        </div>
+        <div class="col-md-4">
+            <h5>🤝 Compromiso</h5>
+            <p>Cada cliente es único, y nos esforzamos por superar sus expectativas.</p>
+        </div>
+        <div class="col-md-4">
+            <h5>💬 Transparencia</h5>
+            <p>Operamos con claridad, honestidad y ética en cada operación.</p>
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <a href="{% url 'inicio' %}" class="btn btn-outline-secondary">Volver al inicio</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'concesionaria/index.html' %}
+
+{% block titulo %}Vehículos - Concesionaria{% endblock %}
+
+{% block contenido %}
+<div class="container">
+    {% if user.is_authenticated %}
+    <div class="mb-3 text-end">
+        <a href="{% url 'crear_vehiculo' %}" class="btn btn-outline-primary">➕ Agregar nuevo vehículo</a>
+    </div>
+    {% endif %}
+
+    <h2 class="mb-4 text-center">Catálogo de Vehículos</h2>
+
+    <form method="get" class="row mb-4">
+        <div class="col-md-3">
+            <input type="text" name="modelo" class="form-control" placeholder="Modelo" value="{{ request.GET.modelo }}">
+        </div>
+        <div class="col-md-3">
+            <input type="text" name="tipo" class="form-control" placeholder="Tipo (auto, moto, camioneta)" value="{{ request.GET.tipo }}">
+        </div>
+        <div class="col-md-3">
+            <input type="text" name="año" class="form-control" placeholder="Año" value="{{ request.GET.año }}">
+        </div>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-primary w-100">Buscar</button>
+        </div>
+    </form>
+
+    {% if vehiculos %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for v in vehiculos %}
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ v.marca }} {{ v.modelo }}</h5>
+                    <p class="card-text">
+                        Tipo: {{ v.tipo|title }}<br>
+                        Año: {{ v.año }}<br>
+                        Precio: ${{ v.precio }}<br>
+                        {% if v.disponible %}
+                            <span class="badge bg-success">Disponible</span>
+                        {% else %}
+                            <span class="badge bg-danger">No disponible</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p class="text-center">No se encontraron vehículos con esos criterios.</p>
+    {% endif %}
+</div>
+{% endblock %}

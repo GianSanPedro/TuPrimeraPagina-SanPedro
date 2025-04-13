@@ -1,0 +1,15 @@
+{% extends 'concesionaria/index.html' %}
+
+{% block titulo %}Nuevo Vehículo{% endblock %}
+
+{% block contenido %}
+<div class="container">
+    <h2 class="mb-4">Cargar nuevo vehículo</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Guardar</button>
+        <a href="{% url 'vehiculos' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

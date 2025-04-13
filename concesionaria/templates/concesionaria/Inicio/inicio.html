@@ -1,0 +1,33 @@
+{% extends 'concesionaria/index.html' %}
+
+{% block titulo %}Inicio - Concesionaria San Pedro{% endblock %}
+
+{% block contenido %}
+<div class="text-center">
+    <h2 class="mb-4">¡Bienvenido a Concesionaria San Pedro!</h2>
+    <p class="lead">Más de 20 años acercando a nuestros clientes al vehículo de sus sueños.</p>
+</div>
+
+<hr>
+
+<div class="row text-center mt-5">
+    <div class="col-md-4">
+        <h4>🚗 Vehículos Nuevos y Usados</h4>
+        <p>Contamos con una amplia variedad de autos, camionetas y motos en excelente estado. Mantenemos precios competitivos y ofertas únicas.</p>
+    </div>
+    <div class="col-md-4">
+        <h4>🤝 Atención Personalizada</h4>
+        <p>Nuestro equipo de vendedores capacitados está listo para ayudarte a encontrar la mejor opción según tu estilo de vida y presupuesto.</p>
+    </div>
+    <div class="col-md-4">
+        <h4>🛠️ Servicio Postventa</h4>
+        <p>Ofrecemos garantía, revisiones mecánicas y asistencia para que tu experiencia sea segura y sin preocupaciones.</p>
+    </div>
+</div>
+
+<hr class="my-5">
+
+<div class="text-center">
+    <a href="{% url 'vehiculos' %}" class="btn btn-primary btn-lg">Ver catálogo de vehículos</a>
+</div>
+{% endblock %}
