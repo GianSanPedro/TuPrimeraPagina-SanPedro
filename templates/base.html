@@ -38,6 +38,16 @@
                 <!-- Navegacion derecha -->
                 <ul class="navbar-nav ms-auto align-items-center">
                     {% if user.is_authenticated %}
+                        {% if user.avatar %}
+                            <li class="nav-item me-2">
+                            <img
+                                src="{{ user.avatar.url }}"
+                                class="rounded-circle"
+                                style="width:32px; height:32px; object-fit:cover;"
+                                alt="Avatar de {{ user.username }}"
+                            >
+                            </li>
+                        {% endif %}
                         <li class="nav-item me-2 text-white-50">
                             👋 Hola, {{ user.username }}
                             {% if user.perfil_cliente %}
@@ -53,11 +63,11 @@
                         </li>
 
                         <!-- Panel según rol -->
-                        {% if not user.perfil_cliente and request.path != '/panel-vendedor/' %}
+                        {% if not user.perfil_cliente and request.path != '/cuentas/PanelVendedor/' %}
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'cuentas:panel_vendedor' %}">Panel</a>
                             </li>
-                        {% elif user.perfil_cliente and request.path != '/panel-cliente/' %}
+                        {% elif user.perfil_cliente and request.path != '/cuentas/PanelCliente/' %}
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'cuentas:panel_cliente' %}">Panel</a>
                             </li>

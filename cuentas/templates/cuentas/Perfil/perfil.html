@@ -7,7 +7,10 @@
 <div class="container mt-4">
   <h2 class="mb-3">Mi perfil</h2>
   <div class="card p-4 shadow-sm rounded">
-
+    {% if usuario.avatar %}
+    <img src="{{ usuario.avatar.url }}" class="rounded-circle mb-3" style="width:100px; height:100px; object-fit:cover;"alt="Mi avatar">
+    {% endif %}
+  
     {% if usuario.perfil_cliente %}
       {# Campos de Cliente #}
       <p><strong>Nombre:</strong> {{ usuario.perfil_cliente.nombre }} {{ usuario.perfil_cliente.apellido }}</p>

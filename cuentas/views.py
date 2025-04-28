@@ -29,7 +29,7 @@ class LoginViewEmail(LoginView):
 
 def registro_cliente(request):
     if request.method == 'POST':
-        form = ClienteRegistroForm(request.POST)
+        form = ClienteRegistroForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save()
             login(request, user)
@@ -37,6 +37,7 @@ def registro_cliente(request):
     else:
         form = ClienteRegistroForm()
     return render(request, 'cuentas/Registro/registro.html', {'form': form})
+
 
 
 @login_required
@@ -73,28 +74,39 @@ def editar_perfil(request):
     user = request.user
     is_cliente = hasattr(user, 'perfil_cliente')
 
-    # Formularios de perfil y (solo en cliente) email
+    # perfil + avatar (Cliente) o perfil + avatar (Vendedor)
     if is_cliente:
-        profile_form = ClientePerfilForm(request.POST or None, instance=user.perfil_cliente)
-        email_form   = UserEmailForm(request.POST or None, instance=user)
+        profile_form = ClientePerfilForm(
+            request.POST or None,
+            request.FILES or None,
+            instance=user.perfil_cliente
+        )
+        email_form = UserEmailForm(
+            request.POST or None,
+            request.FILES or None,
+            instance=user
+        )
     else:
-        profile_form = VendedorPerfilForm(request.POST or None, instance=user)
-        email_form   = None
+        profile_form = VendedorPerfilForm(
+            request.POST or None,
+            request.FILES or None,
+            instance=user
+        )
+        email_form = None
 
-    # Formulario de contraseña opcional
-    password_form = OptionalPasswordChangeForm(user, request.POST or None)
+    password_form = OptionalPasswordChangeForm(
+        user,
+        request.POST or None
+    )
 
     if request.method == 'POST':
-        # Validaciones según bloque
         perfil_ok = profile_form.is_valid()
         email_ok  = email_form.is_valid() if email_form else True
 
-        # Detectamos si el usuario quiso cambiar contraseña
-        old   = request.POST.get('old_password', '')
-        new1  = request.POST.get('new_password1', '')
-        new2  = request.POST.get('new_password2', '')
+        old  = request.POST.get('old_password', '')
+        new1 = request.POST.get('new_password1', '')
+        new2 = request.POST.get('new_password2', '')
         cambio = any([old, new1, new2])
-
         password_ok = password_form.is_valid() if cambio else True
 
         if perfil_ok and email_ok and password_ok:
@@ -108,5 +120,8 @@ def editar_perfil(request):
             messages.success(request, "Perfil actualizado correctamente.")
             return redirect('cuentas:perfil')
 
-    return render(request,'cuentas/Perfil/editar_perfil.html',{'profile_form':  profile_form,'email_form':    email_form,'password_form': password_form,}
-    )
+    return render(request, 'cuentas/Perfil/editar_perfil.html', {
+        'profile_form':  profile_form,
+        'email_form':    email_form,
+        'password_form': password_form,
+    })

@@ -4,7 +4,7 @@
 {% block contenido %}
 <div class="container mt-4">
   <h2 class="mb-3">Editar perfil</h2>
-  <form method="post" class="card p-4 shadow-sm rounded" novalidate>
+  <form method="post" enctype="multipart/form-data" class="card p-4 shadow-sm rounded" novalidate>
     {% csrf_token %}
 
     {# — Email (solo Clientes) — #}

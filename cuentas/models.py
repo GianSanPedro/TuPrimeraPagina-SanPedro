@@ -4,12 +4,18 @@ from django.contrib.auth.models import AbstractUser
 
 class Vendedor(AbstractUser):
     email = models.EmailField(unique=True)
-
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']  
-
     telefono = models.CharField(max_length=20, blank=True)
     fecha_ingreso = models.DateField(null=True, blank=True)
+
+    avatar = models.ImageField(
+        upload_to='avatars/',
+        blank=True,
+        null=True,
+        help_text="Sube aquí tu foto de perfil"
+    )
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
 
     def __str__(self):
         return f"{self.email}"

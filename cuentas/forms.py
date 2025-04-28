@@ -15,69 +15,73 @@ class EmailAuthenticationForm(AuthenticationForm):
 
 
 class ClienteRegistroForm(UserCreationForm):
-    email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={'class': 'form-control'}))
-    nombre = forms.CharField(max_length=50, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    apellido = forms.CharField(max_length=50, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    dni = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    telefono = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    email    = forms.EmailField(required=True, widget=forms.EmailInput(attrs={'class':'form-control'}))
+    nombre   = forms.CharField(max_length=50, widget=forms.TextInput(attrs={'class':'form-control'}))
+    apellido = forms.CharField(max_length=50, widget=forms.TextInput(attrs={'class':'form-control'}))
+    dni      = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'class':'form-control'}))
+    telefono = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'class':'form-control'}))
+    avatar   = forms.ImageField(required=False)
 
     class Meta:
-        model = Vendedor
-        fields = ['email', 'password1', 'password2', 'nombre', 'apellido', 'dni', 'telefono']
+        model  = Vendedor
+        fields = ['email', 'password1', 'password2','nombre', 'apellido', 'dni', 'telefono', 'avatar']
 
     def save(self, commit=True):
         user = super().save(commit=False)
         user.username = self.cleaned_data['email']
-        user.email = self.cleaned_data['email']
+        user.email    = self.cleaned_data['email']
+        if self.cleaned_data.get('avatar'):
+            user.avatar = self.cleaned_data['avatar']
         if commit:
             user.save()
             Cliente.objects.create(
                 usuario=user,
-                nombre=self.cleaned_data['nombre'],
-                apellido=self.cleaned_data['apellido'],
-                dni=self.cleaned_data['dni'],
-                telefono=self.cleaned_data['telefono']
+                nombre   = self.cleaned_data['nombre'],
+                apellido = self.cleaned_data['apellido'],
+                dni      = self.cleaned_data['dni'],
+                telefono = self.cleaned_data['telefono']
             )
         return user
 
 
 class ClientePerfilForm(forms.ModelForm):
     class Meta:
-        model = Cliente
+        model  = Cliente
         fields = ['nombre', 'apellido', 'dni', 'telefono']
         widgets = {
-            'nombre': forms.TextInput(attrs={'class': 'form-control'}),
-            'apellido': forms.TextInput(attrs={'class': 'form-control'}),
-            'dni': forms.TextInput(attrs={'class': 'form-control'}),
-            'telefono': forms.TextInput(attrs={'class': 'form-control'}),
+            'nombre':   forms.TextInput(attrs={'class':'form-control'}),
+            'apellido': forms.TextInput(attrs={'class':'form-control'}),
+            'dni':      forms.TextInput(attrs={'class':'form-control'}),
+            'telefono': forms.TextInput(attrs={'class':'form-control'}),
         }
 
 
 class VendedorPerfilForm(forms.ModelForm):
+    avatar = forms.ImageField(required=False)
+
     class Meta:
-        model = Vendedor
-        # Solo email y teléfono, sin fecha_ingreso
-        fields = ['email', 'telefono']
+        model  = Vendedor
+        fields = ['email', 'telefono', 'avatar']
         widgets = {
-            'email': forms.EmailInput(attrs={'class': 'form-control'}),
-            'telefono': forms.TextInput(attrs={'class': 'form-control'}),
+            'email':    forms.EmailInput(attrs={'class':'form-control'}),
+            'telefono': forms.TextInput(attrs={'class':'form-control'}),
         }
 
 
 class UserEmailForm(forms.ModelForm):
+    avatar = forms.ImageField(required=False)
+
     class Meta:
-        model = User
-        fields = ['email']
+        model  = User
+        fields = ['email', 'avatar']
         widgets = {
-            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class':'form-control'}),
         }
+
 
 class OptionalPasswordChangeForm(PasswordChangeForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Convertimos todos los campos en no obligatorios
         for field in self.fields.values():
             field.required = False
-            # Y quitamos el atributo HTML5
-            if 'required' in field.widget.attrs:
-                del field.widget.attrs['required']
+            field.widget.attrs.pop('required', None)
