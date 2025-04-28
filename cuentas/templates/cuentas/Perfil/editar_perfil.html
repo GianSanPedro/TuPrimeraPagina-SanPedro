@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block titulo %}Editar perfil{% endblock %}
+
+{% block contenido %}
+<div class="container mt-4">
+  <h2 class="mb-3">Editar perfil</h2>
+  <form method="post" class="card p-4 shadow-sm rounded" novalidate>
+    {% csrf_token %}
+
+    {# — Email (solo Clientes) — #}
+    {% if email_form %}
+      <h5>Correo electrónico</h5>
+      {{ email_form.as_p }}
+      <hr>
+    {% endif %}
+
+    {# — Datos personales — #}
+    <h5>Datos personales</h5>
+    {{ profile_form.as_p }}
+    <hr>
+
+    {# — Botón que muestra/oculta el cambio de contraseña — #}
+    <div class="mb-3">
+      <button type="button" id="toggle-password" class="btn btn-outline-secondary">
+        Cambiar contraseña
+      </button>
+    </div>
+
+    {# — Sección oculta de cambio de contraseña — #}
+    <div id="password-section" style="display: none;">
+      <h5>Nueva contraseña</h5>
+      {{ password_form.as_p }}
+      <hr>
+    </div>
+
+    {# — Botones de acción — #}
+    <div class="d-flex gap-2 mt-3">
+      <button type="submit" class="btn btn-success">Guardar cambios</button>
+      <a href="{% url 'cuentas:perfil' %}" class="btn btn-secondary">Cancelar</a>
+    </div>
+  </form>
+</div>
+
+<script>
+  document.getElementById('toggle-password').addEventListener('click', function() {
+    const section = document.getElementById('password-section');
+    if (section.style.display === 'none') {
+      section.style.display = 'block';
+    } else {
+      section.style.display = 'none';
+      // Limpiamos los inputs de contraseña al ocultar
+      section.querySelectorAll('input').forEach(i => i.value = '');
+    }
+  });
+</script>
+{% endblock %}
+

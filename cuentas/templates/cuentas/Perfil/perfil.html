@@ -1,0 +1,32 @@
+{# cuentas/templates/cuentas/Perfil/perfil.html #}
+{% extends "base.html" %}
+
+{% block titulo %}Mi perfil{% endblock %}
+
+{% block contenido %}
+<div class="container mt-4">
+  <h2 class="mb-3">Mi perfil</h2>
+  <div class="card p-4 shadow-sm rounded">
+
+    {% if usuario.perfil_cliente %}
+      {# Campos de Cliente #}
+      <p><strong>Nombre:</strong> {{ usuario.perfil_cliente.nombre }} {{ usuario.perfil_cliente.apellido }}</p>
+      <p><strong>DNI:</strong> {{ usuario.perfil_cliente.dni }}</p>
+      <p><strong>Teléfono:</strong> {{ usuario.perfil_cliente.telefono }}</p>
+      <p><strong>Email:</strong> {{ usuario.email }}</p>
+
+    {% else %}
+      {# Campos de Vendedor #}
+      <p><strong>Usuario:</strong> {{ usuario.username }}</p>
+      <p><strong>Email:</strong> {{ usuario.email }}</p>
+      <p><strong>Teléfono:</strong> {{ usuario.telefono }}</p>
+      <p><strong>Fecha de ingreso:</strong> {{ usuario.fecha_ingreso }}</p>
+    {% endif %}
+    <a href="{% url 'cuentas:editar_perfil' %}" class="btn btn-primary mt-4">
+      Editar perfil
+    </a>
+    
+
+  </div>
+</div>
+{% endblock %}

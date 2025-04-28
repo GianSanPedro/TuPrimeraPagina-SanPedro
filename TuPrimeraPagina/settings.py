@@ -38,9 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'concesionaria',
+    'cuentas',
 ]
 
-AUTH_USER_MODEL = 'concesionaria.Vendedor'
+AUTH_USER_MODEL = 'cuentas.Vendedor'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -57,7 +58,7 @@ ROOT_URLCONF = 'TuPrimeraPagina.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

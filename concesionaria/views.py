@@ -1,8 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
-from django.contrib.auth import login
-from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.urls import reverse_lazy
@@ -10,17 +8,13 @@ from django.http import HttpResponseForbidden
 
 from .models import Vehiculo, Venta
 from .forms import VehiculoForm
-from .forms import EmailAuthenticationForm
-from .forms import ClienteRegistroForm
+
 
 def inicio(request):
     return render(request, 'concesionaria/Inicio/inicio.html')
 
 def quienes(request):
     return render(request, 'concesionaria/QuienesSomos/quienes.html')
-
-def login_view(request):
-    return render(request, 'concesionaria/Login/login.html')
 
 def vehiculos(request):
     tipo = request.GET.get('tipo', '')
@@ -107,52 +101,5 @@ def comprar_vehiculo(request, pk):
 
     return redirect('panel_cliente')
 
-class LoginViewEmail(LoginView):
-    template_name = 'concesionaria/Login/login.html'
-    authentication_form = EmailAuthenticationForm
 
-    def get_success_url(self):
-        if hasattr(self.request.user, 'perfil_cliente'):
-            return reverse_lazy('panel_cliente')
-        else:
-            return reverse_lazy('panel_vendedor')
 
-def registro_cliente(request):
-    if request.method == 'POST':
-        form = ClienteRegistroForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)  # inicia sesion automáticamente
-            return redirect('inicio')
-    else:
-        form = ClienteRegistroForm()
-    return render(request, 'concesionaria/Registro/registro.html', {'form': form})
-
-@login_required
-def panel_vendedor(request):
-    if hasattr(request.user, 'perfil_cliente'):
-        return HttpResponseForbidden("Acceso solo permitido para vendedores.")
-
-    # Vehiculos cargados por el vendedor que aun no se vendieron
-    vehiculos_disponibles = request.user.vehiculos_cargados.filter(disponible=True)
-
-    # Vehiculos vendidos 
-    ventas_realizadas = request.user.ventas.select_related('vehiculo', 'cliente')
-
-    return render(request, 'concesionaria/PanelVendedor/panelVendedor.html', {
-        'vehiculos_disponibles': vehiculos_disponibles,
-        'ventas_realizadas': ventas_realizadas
-    })
-
-@login_required
-def panel_cliente(request):
-    if not hasattr(request.user, 'perfil_cliente'):
-        return HttpResponseForbidden("Solo los clientes pueden acceder a este panel.")
-
-    cliente = request.user.perfil_cliente
-    compras = cliente.compras.select_related('vehiculo', 'vendedor')
-
-    return render(request, 'concesionaria/PanelCliente/panelCliente.html', {
-        'cliente': cliente,
-        'compras': compras,
-    })

@@ -47,31 +47,40 @@
                             {% endif %}
                         </li>
 
-                        <!-- Panel -->
+                        <!-- Enlace Mi perfil -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'cuentas:perfil' %}">Mi perfil</a>
+                        </li>
+
+                        <!-- Panel según rol -->
                         {% if not user.perfil_cliente and request.path != '/panel-vendedor/' %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'panel_vendedor' %}">Panel</a>
+                                <a class="nav-link" href="{% url 'cuentas:panel_vendedor' %}">Panel</a>
                             </li>
                         {% elif user.perfil_cliente and request.path != '/panel-cliente/' %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'panel_cliente' %}">Panel</a>
+                                <a class="nav-link" href="{% url 'cuentas:panel_cliente' %}">Panel</a>
                             </li>
                         {% endif %}
 
                         <!-- Logout -->
                         <li class="nav-item">
-                            <form method="post" action="{% url 'logout' %}">
+                            <form method="post" action="{% url 'cuentas:logout' %}">
                                 {% csrf_token %}
-                                <button type="submit" class="nav-link btn btn-link p-0" style="text-decoration: none;">Cerrar sesión</button>
+                                <button type="submit"
+                                        class="nav-link btn btn-link p-0"
+                                        style="text-decoration: none;">
+                                    Cerrar sesión
+                                </button>
                             </form>
                         </li>
                     {% else %}
                         <!-- Login y Registro -->
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'login' %}">Login</a>
+                            <a class="nav-link" href="{% url 'cuentas:login' %}">Login</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'registro' %}">Registrarse</a>
+                            <a class="nav-link" href="{% url 'cuentas:registro' %}">Registrarse</a>
                         </li>
                     {% endif %}
                 </ul>
@@ -81,8 +90,7 @@
 
     <!-- Contenido principal -->
     <div class="container">
-        {% block contenido %}
-        {% endblock %}
+        {% block contenido %}{% endblock %}
     </div>
 
     <!-- Bootstrap JS -->
