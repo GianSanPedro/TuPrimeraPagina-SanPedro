@@ -2,6 +2,25 @@
 
 Este proyecto es una aplicación web construida con Django como parte del curso. La temática es una concesionaria de vehículos con funcionalidades diferenciadas para vendedores y clientes.
 
+🧠 Lógica de negocio
+
+La aplicación representa una concesionaria de vehículos con flujos diferenciados para clientes y vendedores.
+
+- Los **vendedores** son usuarios creados desde consola o por el administrador. Acceden a un **panel exclusivo** tras iniciar sesión, desde donde pueden:
+  - Registrar nuevos vehículos
+  - Editar o eliminar los vehículos que hayan cargado
+  - Visualizar sus **vehículos disponibles**
+  - Consultar los **vehículos vendidos**, con detalle de cliente, fecha y precio de venta
+
+- Los **clientes** pueden registrarse desde la web. Al iniciar sesión son redirigidos a su **panel de cliente**, donde pueden:
+  - Ver su **historial de compras**
+  - Navegar el catálogo general de vehículos
+  - Comprar vehículos disponibles con un solo clic, lo que genera automáticamente una **venta**, marca el vehículo como **no disponible**, y actualiza los paneles de ambas partes (cliente y vendedor)
+
+- El **superusuario** accede al panel de administración (`/admin`) con privilegios para gestionar todos los modelos del sistema. Puede:
+  - Ver, agregar, modificar o eliminar vendedores, clientes, vehículos y ventas
+  - Ejecutar **acciones personalizadas**, como marcar múltiples vehículos como disponibles o no disponibles desde el listado de administración.
+    
 ---
 
 ## 📦 Instalación
