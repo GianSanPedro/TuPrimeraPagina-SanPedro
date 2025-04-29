@@ -23,73 +23,99 @@ La aplicación representa una concesionaria de vehículos con flujos diferenciad
     
 ---
 
-## 📦 Instalación
+## 📋 Resumen cumplimiento de la consigna:
 
-1. Cloná el repositorio:
-```bash
-git clone https://github.com/tu-usuario/TuPrimeraPagina.git
-cd TuPrimeraPagina
-```
+- **Existencia de `requirements.txt`:** 
+Incluido y actualizado con Django, Pillow y demás dependencias.
 
-2. Creá y activá el entorno virtual:
-```bash
-python -m venv .venv
-.venv\Scripts\activate  
-```
+- **Adaptar templates y views para manejar imágenes:** 
+Todos los formularios (`Registro`, `Editar perfil`, `Crear/Editar Vehículo`) usan `enctype="multipart/form-data"` y reciben `request.FILES`.
 
-3. Instalá las dependencias:
-```bash
-pip install -r requirements.txt
-```
+- **Uso de mínimo 2 CBV:** 
+`PanelVendedorView` y `LoginViewEmail` son `Class-Based Views`.
 
-4. Realizá las migraciones:
-```bash
-python manage.py makemigrations
-python manage.py migrate
-```
+- **Uso de mínimo un mixin en una CBV:** 
+`VendorRequiredMixin` combinado con `LoginRequiredMixin` en `PanelVendedorView`.
 
-5. (Opcional) Creá un superusuario:
-```bash
-python manage.py createsuperuser
-```
+- **Uso de mínimo un decorador en una función-based view:** 
+`@login_required` y validaciones con `HttpResponseForbidden` en `panel_cliente`, `comprar_vehiculo`, etc.
 
-6. Iniciá el servidor:
-```bash
-python manage.py runserver
-```
+- **Una vista de “inicio”:**
+  `concesionaria.views.inicio` en `/` renderiza `Inicio/inicio.html`.
+
+- **Acceso a una vista “Acerca de mí” / “About”:** 
+`concesionaria.views.about` en `/about/` con plantilla `Acerca de mí`.
+
+- **Modelo principal con mín. 3 CharField, 1 ImageField, 1 DateField:** 
+El modelo `Vehiculo` tiene `marca`, `modelo`, `tipo` (CharFields), `foto` (ImageField) y `año` (IntegerField).
+
+- **Listado de objetos con búsqueda y mensaje si no hay resultados:** 
+`/vehiculos/` y panel de vendedor incluyen filtros por modelo, tipo y año y muestran mensaje si no hay resultados.
+
+- **Desde el listado: detalle, creación, edición y borrado:** 
+Enlaces a `crear_vehiculo`, `editar_vehiculo`, `eliminar_vehiculo` directamente desde las listas.
+
+- **Registrar en admin todos los modelos:** 
+`Vehiculo`, `Venta`, `Vendedor` y `Cliente` registrados en `admin.py`.
+
+- **Tener una app para autenticación:** 
+App `cuentas` separada con login, logout, registro, perfil y edición de perfil.
+
+- **Login / Logout / Registro de usuario:** 
+Vistas basadas en `LoginView`, `LogoutView` (con plantilla) y función `registro_cliente`.
+
+- **Registro pide username, email, password + avatar + fecha_nacimiento:** 
+`ClienteRegistroForm` solicita email, password, nombre, apellido, DNI, teléfono, avatar y fecha de nacimiento.
+
+- **Vista de perfil muestra nombre, apellido, email, avatar y fecha_nacimiento:** `
+perfil.html` despliega todos estos campos.
+
+- **Desde perfil: acceso a edición de datos + cambio de password:** 
+`editar_perfil.html` incluye formularios para datos, email/avatar y sección opcional de cambio de contraseña con toggle JS.
+
+- **Un formulario para insertar datos por cada modelo creado**: 
+debido a la logica de negocio planteada, cada clase se crea de una forma distinta
+- Vendedor: creado por consola o admin.
+- Cliente: formulario en `/registro/`.
+- Vehiculo: formulario exclusivo en el panel de vendedor.
+- Venta: se genera automáticamente al comprar un vehículo.
+
+- **Un formulario para buscar algo en la BD**:
+Búsqueda de vehículos por modelo, tipo y año en `/vehiculos/`.
+
+- **Uso de herencia de plantillas (HTML)**:
+- `base.html` como plantilla base.
+- Todas las secciones (`Inicio`, `Vehículos`, `PanelVendedor`, etc.) extienden esta base.
+- Organización clara en subcarpetas: `templates/concesionaria/...`.
+
+- **Aplicación del patrón MVT (Model - View - Template)**:
+- Models para Vendedor, Cliente, Vehiculo y Venta.
+- Views específicas para cada función: registro, login, compra, carga.
+- Templates bien estructurados y reutilizables con bloques `{% block %}`.
 
 ---
 
-## Funcionalidades principales
+## 👥 Roles y funcionalidades extra
 
-### 🏠 Página pública
+### Vendedores
 
-- `/` → Inicio con bienvenida.
-- `/vehiculos/` → Catálogo de vehículos con filtro por tipo, modelo y año.
-- `/quienes/` → Información institucional.
-- `/login/` y `/registro/` → Login unificado y registro de clientes.
+- **Panel de Vendedor** (`/panel-vendedor/`) implementado como CBV con mixins.  
+- **Filtros** en tiempo real por marca, modelo y tipo.  
+- **Listado** simplificado: _Modelo Marca – Tipo_.  
+- **Botones**:
+  - `✏️ Editar`
+  - `🗑️ Eliminar`
+  - `🔎 Ver más` despliega año, precio, disponibilidad y foto en un collapse.  
+- **Carga rápida**: `+ Agregar Vehículo` al lado de “🔍 Filtrar”.  
+- **Ventas realizadas**: tabla con vehículo, cliente, precio y fecha.  
 
----
+### Clientes
 
-### 👩‍💼 Vendedor (solo creados por consola o admin)
-
-- **Inicio de sesión** → `/login/`
-- **Redirección automática al panel** → `/panel-vendedor/`
-- **Desde su panel puede:**
-  - Cargar vehículos: `/vehiculos/nuevo/`
-  - Ver vehículos cargados (disponibles o vendidos)
-  - Editar y eliminar sus propios vehículos
-
----
-
-### 👤 Cliente (registro web permitido)
-
-- **Registro** → `/registro/`
-- **Inicio de sesión** → `/login/`
-- **Redirección automática al panel** → `/panel-cliente/`
-- **Desde su panel puede:**
-  - Ver su historial de compras
-  - Ir a `/vehiculos/` y comprar vehículos disponibles
+- **Registro web** con avatar y fecha de nacimiento.  
+- **Panel de Cliente** (`/panel-cliente/`):
+  - Historial de compras con detalle de cada venta.  
+  - Enlace al catálogo `/vehiculos/` para filtrar y comprar.  
+- **Compra con un clic**: al comprar, se genera la venta, se marca el vehículo como no disponible y se actualizan ambos paneles.
 
 ---
 
@@ -101,27 +127,54 @@ python manage.py runserver
 
 ---
 
-## 🧾 Requisitos de la consigna 
+## 🛠 Tecnologías y librerías
 
-✔️ **Un formulario para insertar datos por cada modelo creado**: debido a la logica de negocio planteada, cada clase se crea de una forma distinta
-- Vendedor: creado por consola o admin.
-- Cliente: formulario en `/registro/`.
-- Vehiculo: formulario exclusivo en el panel de vendedor.
-- Venta: se genera automáticamente al comprar un vehículo.
+- **Python 3.12**, **Django 5.2**  
+- **Bootstrap 5** para estilos y componentes JS (collapse, grid).  
+- **Pillow** para el manejo de ImageFields (avatares, fotos de vehículos).  
+- **SQLite** como base de datos por defecto.  
 
-✔️ **Un formulario para buscar algo en la BD**:
-- Búsqueda de vehículos por modelo, tipo y año en `/vehiculos/`.
+---
 
-✔️ **Uso de herencia de plantillas (HTML)**:
-- `index.html` como plantilla base.
-- Todas las secciones (`Inicio`, `Vehículos`, `PanelVendedor`, etc.) extienden esta base.
-- Organización clara en subcarpetas: `templates/concesionaria/...`.
+## 🚀 Instalación y puesta en marcha
 
-✔️ **Aplicación del patrón MVT (Model - View - Template)**:
-- Models para Vendedor, Cliente, Vehiculo y Venta.
-- Views específicas para cada función: registro, login, compra, carga.
-- Templates bien estructurados y reutilizables con bloques `{% block %}`.
+1. Clonar el repositorio y situarse en la carpeta del proyecto.  
+2. Crear y activar el virtualenv:
 
+    ```bash
+    python -m venv .venv
+    # Windows PowerShell
+    .\.venv\Scripts\Activate.ps1
+    # o Git Bash / WSL
+    source .venv/Scripts/activate
+    ```
+
+3. Instalar dependencias:
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+4. Migrar modelos:
+
+    ```bash
+    python manage.py makemigrations
+    python manage.py migrate
+    ```
+
+5. (Opcional) Crear superusuario:
+
+    ```bash
+    python manage.py createsuperuser
+    ```
+
+6. Levantar el servidor:
+
+    ```bash
+    python manage.py runserver
+    ```
+
+---
 
 ## ✅ Orden sugerido para probar
 
@@ -141,14 +194,37 @@ v = Vendedor.objects.create_user(email="vendedor@demo.com", password="clave1234"
 
 ---
 
+## 📂 Estructura de carpetas clave
+
+```
+.
+├── concesionaria/
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+│   └── templates/concesionaria/
+├── cuentas/
+│   ├── forms.py
+│   ├── views.py
+│   ├── urls.py
+│   └── templates/cuentas/
+├── media/
+├── static/
+├── requirements.txt
+└── README.md
+```
+
 ## 📂 Estructura de templates
 
-- `index.html` → base principal con herencia
+- `base.html`
 - `templates/concesionaria/`
   - `Inicio/inicio.html`
-  - `Vehiculos/vehiculos.html`, `crear_vehiculo.html`
-  - `Login/login.html`
-  - `PanelVendedor/panelVendedor.html`
-  - `PanelCliente/panelCliente.html`
-  - `Registro/registro.html`
+  - `Vehiculos/vehiculos.html`, `crear_vehiculo.html`, `editar_vehiculo.html`, `confirmar_eliminar.html`
   - `QuienesSomos/quienes.html`
+  - `Acerca de mí/About.html`
+- `templates/cuentas/`
+  - `Login/login.html`
+  - `Registro/registro.html`
+  - `Perfil/perfil.html`
+  - `Perfil/editar_perfil.html`
+  - `Logout/logout.html`
