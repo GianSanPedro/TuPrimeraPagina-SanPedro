@@ -21,8 +21,8 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('concesionaria.urls')),
-    path('cuentas/', include('cuentas.urls')),
+    path('',include(('concesionaria.urls', 'concesionaria'),namespace='concesionaria')),
+    path('cuentas/',include(('cuentas.urls', 'cuentas'),namespace='cuentas')),
 ]
 
 if settings.DEBUG:

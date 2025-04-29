@@ -44,7 +44,7 @@
                         </p>
     
                         {% if user.is_authenticated and user.perfil_cliente and v.disponible %}
-                        <form method="post" action="{% url 'comprar_vehiculo' v.pk %}">
+                        <form method="post" action="{% url 'concesionaria:comprar_vehiculo' v.pk %}">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-success btn-sm mt-2">Comprar</button>
                         </form>
@@ -58,5 +58,7 @@
             <p class="text-center">No se encontraron vehículos con esos criterios.</p>
         {% endif %}
     </div>
+    <a href="{% url 'concesionaria:crear_vehiculo' %}"class="btn btn-success">+ Cargar Vehículo </a>
+
     {% endblock %}
 

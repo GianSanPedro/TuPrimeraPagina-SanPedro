@@ -1,4 +1,3 @@
-#ESTO ES CUENTAS VIEWS.PY
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, update_session_auth_hash
 from django.contrib.auth.views import LoginView
@@ -9,16 +8,7 @@ from django.urls import reverse_lazy
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .mixins import VendorRequiredMixin, ClientRequiredMixin
-
-from .forms import (
-    EmailAuthenticationForm,
-    ClienteRegistroForm,
-    ClientePerfilForm,
-    VendedorPerfilForm,
-    UserEmailForm,
-    OptionalPasswordChangeForm  
-)
-
+from .forms import (EmailAuthenticationForm, ClienteRegistroForm, ClientePerfilForm, VendedorPerfilForm, UserEmailForm, OptionalPasswordChangeForm  )
 from concesionaria.models import Vehiculo, Venta
 
 
@@ -37,21 +27,39 @@ def registro_cliente(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('inicio')
+            return redirect('concesionaria:inicio')
     else:
         form = ClienteRegistroForm()
     return render(request, 'cuentas/Registro/registro.html', {'form': form})
 
-
 class PanelVendedorView(LoginRequiredMixin, VendorRequiredMixin, TemplateView):
     template_name = 'cuentas/PanelVendedor/panelVendedor.html'
-    login_url     = reverse_lazy('cuentas:login')  # si no está logueado, va aquí
+    login_url     = reverse_lazy('cuentas:login')
 
     def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
-        user = self.request.user
-        ctx['vehiculos_disponibles'] = user.vehiculos_cargados.filter(disponible=True)
-        ctx['ventas_realizadas']     = user.ventas.select_related('vehiculo','cliente')
+        ctx   = super().get_context_data(**kwargs)
+        user  = self.request.user
+        qs    = user.vehiculos_cargados.filter(disponible=True)
+
+        # Filtros por GET
+        marca  = self.request.GET.get('marca', '')
+        modelo = self.request.GET.get('modelo', '')
+        tipo   = self.request.GET.get('tipo', '')
+
+        if marca:
+            qs = qs.filter(marca__icontains=marca)
+        if modelo:
+            qs = qs.filter(modelo__icontains=modelo)
+        if tipo:
+            qs = qs.filter(tipo__icontains=tipo)
+
+        ctx['vehiculos_disponibles'] = qs
+        # reenviamos los valores para rellenar los inputs
+        ctx['filtro_marca']  = marca
+        ctx['filtro_modelo'] = modelo
+        ctx['filtro_tipo']   = tipo
+
+        ctx['ventas_realizadas'] = user.ventas.select_related('vehiculo', 'cliente')
         return ctx
 
 class PanelClienteView(LoginRequiredMixin, ClientRequiredMixin, TemplateView):
@@ -65,11 +73,9 @@ class PanelClienteView(LoginRequiredMixin, ClientRequiredMixin, TemplateView):
         context['compras'] = cliente.compras.select_related('vehiculo', 'vendedor')
         return context
 
-
 @login_required
 def perfil(request):
     return render(request, 'cuentas/Perfil/perfil.html', {'usuario': request.user})
-
 
 @login_required
 def editar_perfil(request):
