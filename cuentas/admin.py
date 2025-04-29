@@ -1,14 +1,48 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
 from .models import Vendedor, Cliente
 
 @admin.register(Vendedor)
-class VendedorAdmin(admin.ModelAdmin):
-    list_display = ('email', 'username', 'telefono', 'fecha_ingreso', 'is_staff', 'is_superuser')
-    search_fields = ('email', 'username')
-    list_filter = ('is_staff', 'is_superuser')
+class VendedorAdmin(UserAdmin):
+    model = Vendedor
+
+    # Campos que se verán en la lista
+    list_display = ('email', 'username', 'is_staff', 'is_active')
+    list_filter  = ('is_staff', 'is_active')
+
+    # Organización de campos en el detalle
+    fieldsets = (
+        (None, {'fields': ('email', 'username', 'password')}),
+        ('Info personal', {
+            'fields': (
+                'first_name', 'last_name',
+                'telefono', 'fecha_ingreso',
+                'fecha_nacimiento', 'avatar'
+            )
+        }),
+        ('Permisos', {
+            'fields': (
+                'is_staff', 'is_active',
+                'is_superuser', 'groups', 'user_permissions'
+            )
+        }),
+        ('Fechas importantes', {'fields': ('last_login', 'date_joined')}),
+    )
+
+    # Campos al crear un nuevo superusuario/vendedor
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('email', 'username', 'password1', 'password2', 'is_staff', 'is_active'),
+        }),
+    )
+
+    search_fields = ('email',)
+    ordering     = ('email',)
 
 
 @admin.register(Cliente)
 class ClienteAdmin(admin.ModelAdmin):
-    list_display = ('usuario', 'nombre', 'apellido', 'dni', 'telefono')
-    search_fields = ('nombre', 'apellido', 'dni', 'usuario__email')
+    model = Cliente
+    list_display = ('usuario', 'nombre', 'apellido', 'dni', 'telefono', 'fecha_nacimiento')
+    search_fields = ('nombre', 'apellido', 'dni')

@@ -25,6 +25,12 @@ class Vehiculo(models.Model):
         blank=True,
         related_name='vehiculos_cargados'
     )
+    foto = models.ImageField(
+        upload_to='vehiculos/',
+        null=False,
+        blank=False,
+        help_text="Sube aquí la foto del vehículo"
+    )
 
     def __str__(self):
         return f"{self.marca} {self.modelo} ({self.año})"

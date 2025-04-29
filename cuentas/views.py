@@ -1,3 +1,4 @@
+#ESTO ES CUENTAS VIEWS.PY
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, update_session_auth_hash
 from django.contrib.auth.views import LoginView
@@ -14,6 +15,7 @@ from .forms import (
     UserEmailForm,
     OptionalPasswordChangeForm  
 )
+
 from concesionaria.models import Vehiculo, Venta
 
 
@@ -37,7 +39,6 @@ def registro_cliente(request):
     else:
         form = ClienteRegistroForm()
     return render(request, 'cuentas/Registro/registro.html', {'form': form})
-
 
 
 @login_required

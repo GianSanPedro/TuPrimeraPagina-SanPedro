@@ -20,6 +20,10 @@ class Vendedor(AbstractUser):
 
     def __str__(self):
         return f"{self.email}"
+    
+    class Meta:
+        verbose_name = 'Vendedor'
+        verbose_name_plural = 'Vendedores'
 
 
 class Cliente(models.Model):
