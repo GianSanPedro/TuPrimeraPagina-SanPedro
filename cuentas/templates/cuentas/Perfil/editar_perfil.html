@@ -16,7 +16,37 @@
 
     {# — Datos personales — #}
     <h5>Datos personales</h5>
-    {{ profile_form.as_p }}
+
+    <div class="mb-3">
+      {{ profile_form.nombre.label_tag }}
+      {{ profile_form.nombre }}
+      {{ profile_form.nombre.errors }}
+    </div>
+
+    <div class="mb-3">
+      {{ profile_form.apellido.label_tag }}
+      {{ profile_form.apellido }}
+      {{ profile_form.apellido.errors }}
+    </div>
+
+    <div class="mb-3">
+      {{ profile_form.dni.label_tag }}
+      {{ profile_form.dni }}
+      {{ profile_form.dni.errors }}
+    </div>
+
+    <div class="mb-3">
+      {{ profile_form.telefono.label_tag }}
+      {{ profile_form.telefono }}
+      {{ profile_form.telefono.errors }}
+    </div>
+
+    <div class="mb-3">
+      {{ profile_form.fecha_nacimiento.label_tag }}
+      {{ profile_form.fecha_nacimiento }}
+      {{ profile_form.fecha_nacimiento.errors }}
+    </div>
+
     <hr>
 
     {# — Botón que muestra/oculta el cambio de contraseña — #}
@@ -54,4 +84,3 @@
   });
 </script>
 {% endblock %}
-

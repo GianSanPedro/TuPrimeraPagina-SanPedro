@@ -17,6 +17,7 @@
       <p><strong>DNI:</strong> {{ usuario.perfil_cliente.dni }}</p>
       <p><strong>Teléfono:</strong> {{ usuario.perfil_cliente.telefono }}</p>
       <p><strong>Email:</strong> {{ usuario.email }}</p>
+      <p><strong>Fecha de nacimiento:</strong>{{ usuario.perfil_cliente.fecha_nacimiento }}</p>
 
     {% else %}
       {# Campos de Vendedor #}
@@ -24,6 +25,7 @@
       <p><strong>Email:</strong> {{ usuario.email }}</p>
       <p><strong>Teléfono:</strong> {{ usuario.telefono }}</p>
       <p><strong>Fecha de ingreso:</strong> {{ usuario.fecha_ingreso }}</p>
+      <p><strong>Fecha de nacimiento:</strong>{{ usuario.fecha_nacimiento }}</p>
     {% endif %}
     <a href="{% url 'cuentas:editar_perfil' %}" class="btn btn-primary mt-4">
       Editar perfil

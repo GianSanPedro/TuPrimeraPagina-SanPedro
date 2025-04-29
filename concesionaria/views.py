@@ -34,6 +34,9 @@ def vehiculos(request):
         'vehiculos': vehiculos_filtrados
     })
 
+def about(request):
+    return render(request, 'concesionaria/Acerca de mi/About.html')
+
 @login_required
 def crear_vehiculo(request):
     # Solo permitimos que lo usen vendedores (no clientes)
