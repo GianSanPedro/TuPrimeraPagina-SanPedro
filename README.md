@@ -75,23 +75,23 @@ perfil.html` despliega todos estos campos.
 
 - **Un formulario para insertar datos por cada modelo creado**: 
 debido a la logica de negocio planteada, cada clase se crea de una forma distinta
-- Vendedor: creado por consola o admin.
-- Cliente: formulario en `/registro/`.
-- Vehiculo: formulario exclusivo en el panel de vendedor.
-- Venta: se genera automáticamente al comprar un vehículo.
+  - Vendedor: creado por consola o admin.
+  - Cliente: formulario en `/registro/`.
+  - Vehiculo: formulario exclusivo en el panel de vendedor.
+  - Venta: se genera automáticamente al comprar un vehículo.
 
 - **Un formulario para buscar algo en la BD**:
 Búsqueda de vehículos por modelo, tipo y año en `/vehiculos/`.
 
 - **Uso de herencia de plantillas (HTML)**:
-- `base.html` como plantilla base.
-- Todas las secciones (`Inicio`, `Vehículos`, `PanelVendedor`, etc.) extienden esta base.
-- Organización clara en subcarpetas: `templates/concesionaria/...`.
+  - `base.html` como plantilla base.
+  - Todas las secciones (`Inicio`, `Vehículos`, `PanelVendedor`, etc.) extienden esta base.
+  - Organización clara en subcarpetas: `templates/concesionaria/...`.
 
 - **Aplicación del patrón MVT (Model - View - Template)**:
-- Models para Vendedor, Cliente, Vehiculo y Venta.
-- Views específicas para cada función: registro, login, compra, carga.
-- Templates bien estructurados y reutilizables con bloques `{% block %}`.
+  - Models para Vendedor, Cliente, Vehiculo y Venta.
+  - Views específicas para cada función: registro, login, compra, carga.
+  - Templates bien estructurados y reutilizables con bloques `{% block %}`.
 
 ---
 
