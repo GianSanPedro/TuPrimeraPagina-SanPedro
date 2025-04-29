@@ -1,14 +1,39 @@
 {% extends 'base.html' %}
-
-{% block titulo %}Iniciar sesión{% endblock %}
+{% block titulo %}Ingreso de Usuarios{% endblock %}
 
 {% block contenido %}
 <div class="container">
-    <h2 class="mb-4">Ingreso de Usuarios</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Iniciar sesión</button>
-    </form>
+  <div class="row justify-content-center">
+    <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-4">
+      <h2 class="mb-4 text-center">Ingreso de Usuarios</h2>
+      <div class="card p-4 shadow-sm">
+        <form method="post">
+          {% csrf_token %}
+
+          {# — Email — #}
+          <div class="mb-3">
+            {{ form.username.label_tag }}
+            {{ form.username }}
+            {% if form.username.errors %}
+              <div class="text-danger small">{{ form.username.errors }}</div>
+            {% endif %}
+          </div>
+
+          {# — Contraseña — #}
+          <div class="mb-3">
+            {{ form.password.label_tag|default:"Contraseña" }}
+            {{ form.password }}
+            {% if form.password.errors %}
+              <div class="text-danger small">{{ form.password.errors }}</div>
+            {% endif %}
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100">Iniciar sesión</button>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
+
+

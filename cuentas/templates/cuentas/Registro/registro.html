@@ -1,14 +1,109 @@
+{# templates/cuentas/Registro/registro.html #}
 {% extends 'base.html' %}
 
-{% block titulo %}Registro de Cliente{% endblock %}
+{% block titulo %}Registrarse como Cliente{% endblock %}
 
 {% block contenido %}
 <div class="container">
-    <h2 class="mb-4">Registrarse como Cliente</h2>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-success">Registrarse</button>
-    </form>
+  <div class="row justify-content-center">
+    <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+      <h2 class="mb-4 text-center">Registrarse como Cliente</h2>
+      <div class="card p-4 shadow-sm">
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+
+          {# — Email — #}
+          <div class="mb-3">
+            {{ form.email.label_tag }}
+            {{ form.email }}
+            {% if form.email.errors %}
+              <div class="text-danger small">{{ form.email.errors }}</div>
+            {% endif %}
+          </div>
+
+          {# — Contraseña — #}
+          <div class="mb-3">
+            <label for="{{ form.password1.id_for_label }}">Contraseña</label>
+            {{ form.password1 }}
+            {% if form.password1.errors %}
+              <div class="text-danger small">{{ form.password1.errors }}</div>
+            {% endif %}
+            <ul class="text-muted small mt-1 mb-0">
+              <li>La contraseña no puede ser demasiado similar a tu información personal.</li>
+              <li>Debe contener al menos 8 caracteres.</li>
+              <li>No puede ser una contraseña de uso común.</li>
+              <li>No puede ser completamente numérica.</li>
+            </ul>
+          </div>
+
+          {# — Confirmar contraseña — #}
+          <div class="mb-3">
+            <label for="{{ form.password2.id_for_label }}">Confirmar contraseña</label>
+            {{ form.password2 }}
+            {% if form.password2.errors %}
+              <div class="text-danger small">{{ form.password2.errors }}</div>
+            {% endif %}
+          </div>
+
+          {# — Nombre — #}
+          <div class="mb-3">
+            {{ form.nombre.label_tag }}
+            {{ form.nombre }}
+            {% if form.nombre.errors %}
+              <div class="text-danger small">{{ form.nombre.errors }}</div>
+            {% endif %}
+          </div>
+
+          {# — Apellido — #}
+          <div class="mb-3">
+            {{ form.apellido.label_tag }}
+            {{ form.apellido }}
+            {% if form.apellido.errors %}
+              <div class="text-danger small">{{ form.apellido.errors }}</div>
+            {% endif %}
+          </div>
+
+          {# — DNI — #}
+          <div class="mb-3">
+            {{ form.dni.label_tag }}
+            {{ form.dni }}
+            {% if form.dni.errors %}
+              <div class="text-danger small">{{ form.dni.errors }}</div>
+            {% endif %}
+          </div>
+
+          {# — Teléfono — #}
+          <div class="mb-3">
+            {{ form.telefono.label_tag }}
+            {{ form.telefono }}
+            {% if form.telefono.errors %}
+              <div class="text-danger small">{{ form.telefono.errors }}</div>
+            {% endif %}
+          </div>
+
+          {# — Avatar — #}
+          <div class="mb-3">
+            {{ form.avatar.label_tag }}
+            {{ form.avatar }}
+            {% if form.avatar.errors %}
+              <div class="text-danger small">{{ form.avatar.errors }}</div>
+            {% endif %}
+          </div>
+
+          {# — Fecha de Nacimiento — #}
+          <div class="mb-3">
+            {{ form.fecha_nacimiento.label_tag }}
+            {{ form.fecha_nacimiento }}
+            {% if form.fecha_nacimiento.errors %}
+              <div class="text-danger small">{{ form.fecha_nacimiento.errors }}</div>
+            {% endif %}
+          </div>
+
+          <button type="submit" class="btn btn-success w-100">Registrarse</button>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
+

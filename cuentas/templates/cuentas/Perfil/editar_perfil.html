@@ -4,66 +4,82 @@
 {% block contenido %}
 <div class="container mt-4">
   <h2 class="mb-3">Editar perfil</h2>
-  <form method="post" enctype="multipart/form-data" class="card p-4 shadow-sm rounded" novalidate>
+  <form method="post" enctype="multipart/form-data"
+        class="card p-4 shadow-sm rounded" novalidate>
     {% csrf_token %}
 
-    {# — Email (solo Clientes) — #}
+    {# — Correo y Avatar (solo clientes) — #}
     {% if email_form %}
       <h5>Correo electrónico</h5>
-      {{ email_form.as_p }}
+      {% for field in email_form %}
+        <div class="mb-3">
+          {{ field.label_tag }}
+          {% if field.name == "avatar" and user.avatar %}
+            <div class="mb-2">
+              <img
+                src="{{ user.avatar.url }}"
+                class="rounded-circle"
+                width="80"
+                alt="Avatar actual de {{ user.username }}"
+              >
+            </div>
+          {% endif %}
+          {{ field }}
+          {% for err in field.errors %}
+            <div class="text-danger small">{{ err }}</div>
+          {% endfor %}
+        </div>
+      {% endfor %}
       <hr>
     {% endif %}
 
-    {# — Datos personales — #}
+    {# — Datos personales y Avatar (vendedores) — #}
     <h5>Datos personales</h5>
-
-    <div class="mb-3">
-      {{ profile_form.nombre.label_tag }}
-      {{ profile_form.nombre }}
-      {{ profile_form.nombre.errors }}
-    </div>
-
-    <div class="mb-3">
-      {{ profile_form.apellido.label_tag }}
-      {{ profile_form.apellido }}
-      {{ profile_form.apellido.errors }}
-    </div>
-
-    <div class="mb-3">
-      {{ profile_form.dni.label_tag }}
-      {{ profile_form.dni }}
-      {{ profile_form.dni.errors }}
-    </div>
-
-    <div class="mb-3">
-      {{ profile_form.telefono.label_tag }}
-      {{ profile_form.telefono }}
-      {{ profile_form.telefono.errors }}
-    </div>
-
-    <div class="mb-3">
-      {{ profile_form.fecha_nacimiento.label_tag }}
-      {{ profile_form.fecha_nacimiento }}
-      {{ profile_form.fecha_nacimiento.errors }}
-    </div>
-
+    {% for field in profile_form %}
+      <div class="mb-3">
+        {{ field.label_tag }}
+        {% if field.name == "avatar" and user.avatar %}
+          <div class="mb-2">
+            <img
+              src="{{ user.avatar.url }}"
+              class="rounded-circle"
+              width="80"
+              alt="Avatar actual de {{ user.username }}"
+            >
+          </div>
+        {% endif %}
+        {{ field }}
+        {% for err in field.errors %}
+          <div class="text-danger small">{{ err }}</div>
+        {% endfor %}
+      </div>
+    {% endfor %}
     <hr>
 
-    {# — Botón que muestra/oculta el cambio de contraseña — #}
+    {# — Botón para mostrar/ocultar cambio de contraseña — #}
     <div class="mb-3">
-      <button type="button" id="toggle-password" class="btn btn-outline-secondary">
+      <button type="button" id="toggle-password"
+              class="btn btn-outline-secondary">
         Cambiar contraseña
       </button>
     </div>
 
     {# — Sección oculta de cambio de contraseña — #}
-    <div id="password-section" style="display: none;">
+    <div id="password-section" style="display:none;">
       <h5>Nueva contraseña</h5>
-      {{ password_form.as_p }}
+      {% for field in password_form %}
+        <div class="mb-3">
+          {{ field.label_tag }}
+          {{ field }}
+          {% for err in field.errors %}
+            <div class="text-danger small">{{ err }}</div>
+          {% endfor %}
+        </div>
+      {% endfor %}
       <hr>
     </div>
 
-    {# — Botones de acción — #}
+    {# — Botones finales — #}
     <div class="d-flex gap-2 mt-3">
       <button type="submit" class="btn btn-success">Guardar cambios</button>
       <a href="{% url 'cuentas:perfil' %}" class="btn btn-secondary">Cancelar</a>
@@ -72,15 +88,17 @@
 </div>
 
 <script>
-  document.getElementById('toggle-password').addEventListener('click', function() {
-    const section = document.getElementById('password-section');
-    if (section.style.display === 'none') {
-      section.style.display = 'block';
-    } else {
-      section.style.display = 'none';
-      // Limpiamos los inputs de contraseña al ocultar
-      section.querySelectorAll('input').forEach(i => i.value = '');
-    }
-  });
+  document.getElementById('toggle-password')
+    .addEventListener('click', function() {
+      const sec = document.getElementById('password-section');
+      if (sec.style.display === 'none') {
+        sec.style.display = 'block';
+      } else {
+        sec.style.display = 'none';
+        sec.querySelectorAll('input').forEach(i => i.value = '');
+      }
+    });
 </script>
 {% endblock %}
+
+
