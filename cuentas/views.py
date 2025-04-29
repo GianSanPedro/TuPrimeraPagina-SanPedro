@@ -6,6 +6,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponseForbidden
 from django.urls import reverse_lazy
+from django.views.generic import TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from .mixins import VendorRequiredMixin, ClientRequiredMixin
 
 from .forms import (
     EmailAuthenticationForm,
@@ -28,7 +31,6 @@ class LoginViewEmail(LoginView):
             return reverse_lazy('cuentas:panel_cliente')
         return reverse_lazy('cuentas:panel_vendedor')
 
-
 def registro_cliente(request):
     if request.method == 'POST':
         form = ClienteRegistroForm(request.POST, request.FILES)
@@ -41,28 +43,27 @@ def registro_cliente(request):
     return render(request, 'cuentas/Registro/registro.html', {'form': form})
 
 
-@login_required
-def panel_vendedor(request):
-    if hasattr(request.user, 'perfil_cliente'):
-        return HttpResponseForbidden("Acceso solo permitido para vendedores.")
-    vehiculos_disponibles = request.user.vehiculos_cargados.filter(disponible=True)
-    ventas_realizadas = request.user.ventas.select_related('vehiculo', 'cliente')
-    return render(request, 'cuentas/PanelVendedor/panelVendedor.html', {
-        'vehiculos_disponibles': vehiculos_disponibles,
-        'ventas_realizadas':     ventas_realizadas,
-    })
+class PanelVendedorView(LoginRequiredMixin, VendorRequiredMixin, TemplateView):
+    template_name = 'cuentas/PanelVendedor/panelVendedor.html'
+    login_url     = reverse_lazy('cuentas:login')  # si no está logueado, va aquí
 
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        user = self.request.user
+        ctx['vehiculos_disponibles'] = user.vehiculos_cargados.filter(disponible=True)
+        ctx['ventas_realizadas']     = user.ventas.select_related('vehiculo','cliente')
+        return ctx
 
-@login_required
-def panel_cliente(request):
-    if not hasattr(request.user, 'perfil_cliente'):
-        return HttpResponseForbidden("Solo los clientes pueden acceder a este panel.")
-    cliente = request.user.perfil_cliente
-    compras = cliente.compras.select_related('vehiculo', 'vendedor')
-    return render(request, 'cuentas/PanelCliente/panelCliente.html', {
-        'cliente': cliente,
-        'compras': compras,
-    })
+class PanelClienteView(LoginRequiredMixin, ClientRequiredMixin, TemplateView):
+    template_name = 'cuentas/PanelCliente/panelCliente.html'
+    login_url     = reverse_lazy('cuentas:login')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        cliente = self.request.user.perfil_cliente
+        context['cliente'] = cliente
+        context['compras'] = cliente.compras.select_related('vehiculo', 'vendedor')
+        return context
 
 
 @login_required
