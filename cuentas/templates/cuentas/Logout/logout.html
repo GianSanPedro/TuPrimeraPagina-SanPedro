@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block titulo %}Has cerrado sesión{% endblock %}
+
+{% block contenido %}
+<div class="container mt-5 text-center">
+  <h2>👋 ¡Hasta pronto!</h2>
+  <p>Has cerrado sesión correctamente.</p>
+  <a class="btn btn-primary mt-3" href="{% url 'concesionaria:inicio' %}">
+    Volver al inicio
+  </a>
+  <a class="btn btn-secondary mt-3" href="{% url 'cuentas:login' %}">
+    Iniciar sesión de nuevo
+  </a>
+</div>
+{% endblock %}

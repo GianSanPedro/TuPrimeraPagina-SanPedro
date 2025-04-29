@@ -7,10 +7,11 @@ app_name = 'cuentas'
 
 urlpatterns = [
     path('Login/',     LoginViewEmail.as_view(),    name='login'),
-    path('Logout/',    LogoutView.as_view(),        name='logout'),
+    path('Logout/',LogoutView.as_view(template_name='cuentas/Logout/logout.html'),name='logout'),
     path('Registro/',  registro_cliente,            name='registro'),
     path('PanelVendedor/', PanelVendedorView.as_view(), name='panel_vendedor'),
     path('PanelCliente/', PanelClienteView.as_view(), name='panel_cliente'),
     path('Perfil/',    perfil,                      name='perfil'),
     path('Perfil/editar/', editar_perfil,           name='editar_perfil'),
 ]
+
