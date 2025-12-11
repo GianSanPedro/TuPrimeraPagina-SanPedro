@@ -1,10 +1,10 @@
 Spanish version available in [README_ES.md](README_ES.md).
 
-# San Pedro Dealership — Django Web App
+# San Pedro Dealership — Django Web App 🚗
 
 Django monolith for a car dealership with distinct flows for sellers and customers, plus an admin panel for superusers. The UI is server-rendered with Django templates and Bootstrap; there is no separate SPA or exposed REST API.
 
-## 1. Academic context / assignment
+## 1. Academic context / assignment 🎓
 Built as a course assignment. The brief requires:
 - Functional dealership site with differentiated roles.
 - Image handling (vehicles and avatars) using `multipart/form-data`.
@@ -13,7 +13,7 @@ Built as a course assignment. The brief requires:
 - Home view and About view.
 - MVT pattern with template inheritance.
 
-## 2. Business logic and roles
+## 2. Business logic and roles 🧩
 ### Sellers (`Vendedor` model)
 - Access a dedicated dashboard after login.
 - Create, edit, and delete their own vehicles.
@@ -71,7 +71,7 @@ Built as a course assignment. The brief requires:
 - Full CRUD for Vehicles, Sales, Sellers, and Customers.
 - Custom actions to toggle vehicle availability.
 
-## 5. Technical overview
+## 5. Technical overview 🛠️
 - **App type:** Django monolith with templates; no SPA or REST API layer.
 - **Backend:** Python 3.12, Django 5.2, Django ORM, custom user `Vendedor` (email as `USERNAME_FIELD`), `Cliente` profile.
 - **Frontend:** Django templates + Bootstrap 5 (CDN).
@@ -79,7 +79,7 @@ Built as a course assignment. The brief requires:
 - **Media:** `ImageField` for vehicles and avatars; Pillow for image handling.
 - **Dependencies:** Django, Pillow, sqlparse, tzdata (see `requirements.txt`).
 
-## 6. Architecture and structure
+## 6. Architecture and structure 🧱
 - `TuPrimeraPagina/`: project config (settings, urls, wsgi/asgi).
 - `concesionaria/`: business logic (`Vehiculo`, `Venta`; catalog, purchase, vehicle CRUD; admin; templates).
 - `cuentas/`: auth and profiles (custom `Vendedor`, `Cliente`; dashboards as CBVs; forms and access mixins).
@@ -122,7 +122,7 @@ Built as a course assignment. The brief requires:
   - `Perfil/editar_perfil.html`
   - `Logout/logout.html`
 
-## 7. Installation & setup
+## 7. Installation & setup ⚙️
 1) Clone the repo and move into the project directory.  
 2) Create and activate a virtualenv:
 ```bash
@@ -136,7 +136,7 @@ source .venv/Scripts/activate
 ```bash
 pip install -r requirements.txt
 ```
-4) Run migrations:
+4) Apply database migrations:
 ```bash
 python manage.py makemigrations
 python manage.py migrate
@@ -152,7 +152,14 @@ python manage.py runserver
 ```
 Open `http://127.0.0.1:8000/` in your browser.
 
-## 9. Suggested test flow
+## 9. Demo users (preloaded) 👥
+- Sellers:
+  - `vendedor1@demo.com` / `Clave123!`
+  - `vendedor2@demo.com` / `Clave123!`
+  - `vendedor3@demo.com` / `Clave123!`
+- Sample vehicles: 9 items (3 cars, 3 trucks, 3 bikes) assigned to those sellers and marked as available.
+
+## 9.1 Suggested test flow 🧪
 1. Create a superuser and log in to `/admin/`.  
 2. Create a seller via console/admin:
    ```python
@@ -171,16 +178,13 @@ Open `http://127.0.0.1:8000/` in your browser.
    - It appears in the customer's history.
    - It appears as sold in the seller's panel.
 
-## 10. Environment configuration
+## 10. Environment configuration 🌐
 - Expected variables for deployment:
   - `DJANGO_SECRET_KEY`: secret key (do not commit).
   - `DJANGO_DEBUG`: set to `False` in production.
   - `DJANGO_ALLOWED_HOSTS`: comma-separated list of allowed hosts.
 
-## 11. Tests
-No automated tests included (`concesionaria/tests.py` and `cuentas/tests.py` are empty).
-
-## 12. Future work
+## 11. Future work
 - Add unit/integration tests for key flows (registration, purchase, dashboard permissions).
 - Harden production security (DEBUG=False, allowed hosts, CSRF/HTTPS).
 - Ensure sensitive actions (e.g., purchase) are POST-only with CSRF protection.

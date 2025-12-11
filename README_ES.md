@@ -1,10 +1,10 @@
 Versión en inglés disponible en [README.md](README.md).
 
-# Concesionaria San Pedro — Aplicación web Django
+# Concesionaria San Pedro — Aplicación web Django 🚗
 
 Aplicación web monolítica construida con Django para una concesionaria de vehículos. Gestiona flujos diferenciados para vendedores y clientes y ofrece un panel de administración para superusuarios. La UI se renderiza con templates de Django y estilos Bootstrap; no existe una SPA separada ni una API REST expuesta.
 
-## 1. Contexto académico y consigna
+## 1. Contexto académico y consigna 🎓
 Proyecto desarrollado como trabajo práctico de un curso de Django. La consigna exige:
 - Sitio funcional para una concesionaria con roles diferenciados.
 - Manejo de imágenes (vehículos y avatares) en formularios con `multipart/form-data`.
@@ -13,7 +13,7 @@ Proyecto desarrollado como trabajo práctico de un curso de Django. La consigna 
 - Vista de inicio y vista “Acerca de”.
 - Aplicación del patrón MVT y herencia de plantillas.
 
-## 2. Lógica de negocio y roles
+## 2. Lógica de negocio y roles 🧩
 ### Vendedores (modelo `Vendedor`)
 - Acceden a un panel exclusivo tras iniciar sesión.
 - Registrar, editar o eliminar vehículos propios.
@@ -71,7 +71,7 @@ Proyecto desarrollado como trabajo práctico de un curso de Django. La consigna 
 - Gestión completa de Vehículos, Ventas, Vendedores y Clientes.
 - Acciones personalizadas para disponibilidad de vehículos.
 
-## 5. Resumen técnico
+## 5. Resumen técnico 🛠️
 - **Tipo de app:** Monolito Django con templates; sin SPA ni API REST.
 - **Backend:** Python 3.12, Django 5.2, ORM de Django, usuario custom `Vendedor` (email como `USERNAME_FIELD`), perfil `Cliente`.
 - **Frontend:** Templates de Django + Bootstrap 5 (CDN).
@@ -79,7 +79,7 @@ Proyecto desarrollado como trabajo práctico de un curso de Django. La consigna 
 - **Medios:** `ImageField` para vehículos y avatares; Pillow para manejo de imágenes.
 - **Dependencias clave:** Django, Pillow, sqlparse, tzdata (ver `requirements.txt`).
 
-## 6. Arquitectura y estructura
+## 6. Arquitectura y estructura 🧱
 - `TuPrimeraPagina/`: configuración del proyecto (settings, urls, wsgi/asgi).
 - `concesionaria/`: lógica de negocio (`Vehiculo`, `Venta`; catálogo, compra, CRUD de vehículos; admin; templates específicos).
 - `cuentas/`: autenticación y perfiles (`Vendedor` custom, `Cliente`; paneles como CBV; formularios y mixins de acceso).
@@ -122,7 +122,7 @@ Proyecto desarrollado como trabajo práctico de un curso de Django. La consigna 
   - `Perfil/editar_perfil.html`
   - `Logout/logout.html`
 
-## 7. Instalación y configuración
+## 7. Instalación y configuración ⚙️
 1) Clonar el repositorio y ubicarse en la carpeta del proyecto.  
 2) Crear y activar un entorno virtual:
 ```bash
@@ -136,7 +136,7 @@ source .venv/Scripts/activate
 ```bash
 pip install -r requirements.txt
 ```
-4) Migrar modelos:
+4) Aplicar migraciones de la base de datos:
 ```bash
 python manage.py makemigrations
 python manage.py migrate
@@ -152,7 +152,14 @@ python manage.py runserver
 ```
 Abrir `http://127.0.0.1:8000/` en el navegador.
 
-## 9. Orden sugerido para probar
+## 9. Usuarios de demo (ya creados) 👥
+- Vendedores:
+  - `vendedor1@demo.com` / `Clave123!`
+  - `vendedor2@demo.com` / `Clave123!`
+  - `vendedor3@demo.com` / `Clave123!`
+- Vehículos de ejemplo: 9 cargados (3 autos, 3 camionetas, 3 motos) asociados a esos vendedores y marcados como disponibles.
+
+## 9.1 Orden sugerido para probar 🧪
 1. Crear un superusuario e ingresar a `/admin/`.  
 2. Crear un vendedor desde consola o admin:
    ```python
@@ -171,7 +178,7 @@ Abrir `http://127.0.0.1:8000/` en el navegador.
    - Aparece en el historial del cliente.
    - Aparece como vendido en el panel del vendedor.
 
-## 10. Configuración por entorno
+## 10. Configuración por entorno 🌐
 - Variables esperadas para despliegue:
   - `DJANGO_SECRET_KEY`: clave secreta (no versionar).
   - `DJANGO_DEBUG`: `False` en producción.
