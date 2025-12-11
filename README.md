@@ -1,201 +1,93 @@
-# Concesionaria San Pedro 🚗
+Spanish version available in [README_ES.md](README_ES.md).
 
-Este proyecto es una aplicación web construida con Django como parte del curso. La temática es una concesionaria de vehículos con funcionalidades diferenciadas para vendedores y clientes.
+# San Pedro Dealership — Django Web App
 
-🧠 Lógica de negocio
+Django monolith for a car dealership with distinct flows for sellers and customers, plus an admin panel for superusers. The UI is server-rendered with Django templates and Bootstrap; there is no separate SPA or exposed REST API.
 
-La aplicación representa una concesionaria de vehículos con flujos diferenciados para clientes y vendedores.
+## 1. Academic context / assignment
+Built as a course assignment. The brief requires:
+- Functional dealership site with differentiated roles.
+- Image handling (vehicles and avatars) using `multipart/form-data`.
+- At least 2 Class-Based Views (CBV) and 1 mixin in a CBV.
+- A decorator on a Function-Based View.
+- Home view and About view.
+- MVT pattern with template inheritance.
 
-- Los **vendedores** son usuarios creados desde consola o por el administrador. Acceden a un **panel exclusivo** tras iniciar sesión, desde donde pueden:
-  - Registrar nuevos vehículos
-  - Editar o eliminar los vehículos que hayan cargado
-  - Visualizar sus **vehículos disponibles**
-  - Consultar los **vehículos vendidos**, con detalle de cliente, fecha y precio de venta
+## 2. Business logic and roles
+### Sellers (`Vendedor` model)
+- Access a dedicated dashboard after login.
+- Create, edit, and delete their own vehicles.
+- View available vehicles and their completed sales (customer, date, price).
+- Filter vehicles by brand, model, and type.
 
-- Los **clientes** pueden registrarse desde la web. Al iniciar sesión son redirigidos a su **panel de cliente**, donde pueden:
-  - Ver su **historial de compras**
-  - Navegar el catálogo general de vehículos
-  - Comprar vehículos disponibles con un solo clic, lo que genera automáticamente una **venta**, marca el vehículo como **no disponible**, y actualiza los paneles de ambas partes (cliente y vendedor)
+### Customers (`Cliente` profile)
+- Self-register with avatar and birthdate.
+- Customer dashboard with purchase history.
+- Browse the catalog and buy available vehicles in one click; the purchase creates a `Venta`, marks the vehicle unavailable, and updates both dashboards.
 
-- El **superusuario** accede al panel de administración (`/admin`) con privilegios para gestionar todos los modelos del sistema. Puede:
-  - Ver, agregar, modificar o eliminar vendedores, clientes, vehículos y ventas
-  - Ejecutar **acciones personalizadas**, como marcar múltiples vehículos como disponibles o no disponibles desde el listado de administración.
-    
----
+### Superuser (admin)
+- Manages all models from `/admin`.
+- Bulk actions to mark vehicles as available/unavailable.
 
-## 📋 Resumen cumplimiento de la consigna:
+### Additional flows
+- Public catalog `/vehiculos/` with filters by model, type, and year, plus empty-state messaging.
+- One-click purchase flows reflected in both seller and customer panels.
 
-- **Existencia de `requirements.txt`:** 
-Incluido y actualizado con Django, Pillow y demás dependencias.
+## 3. Assignment compliance checklist
+- `requirements.txt` included (Django, Pillow, minimal deps).
+- Forms handle images with `enctype="multipart/form-data"` and `request.FILES`.
+- At least 2 CBVs: `PanelVendedorView` and `LoginViewEmail`.
+- At least 1 mixin in CBV: `VendorRequiredMixin` + `LoginRequiredMixin` on `PanelVendedorView`.
+- Decorators on FBVs: `@login_required` and `HttpResponseForbidden` checks (e.g., `comprar_vehiculo`).
+- Home view: `concesionaria.views.inicio` → `Inicio/inicio.html`.
+- About view: `concesionaria.views.about` → `Acerca de mi/About.html`.
+- Main model with 3 `CharField`, 1 `ImageField`, 1 date/integer field: `Vehiculo` with `marca`, `modelo`, `tipo`, `foto`, `año`.
+- Listings with search and empty message: `/vehiculos/` and seller dashboard.
+- From listings you can create, edit, and delete vehicles.
+- All models registered in admin: `Vehiculo`, `Venta`, `Vendedor`, `Cliente`.
+- Separate auth app (`cuentas`) with login, logout, registration, profile, and profile edit.
+- Login/Logout/Registration via `LoginView`, `LogoutView`, and `registro_cliente`.
+- Registration collects username/email/password + avatar + birthdate.
+- Profile shows name, surname, email, avatar, and birthdate; profile page links to edit and password change.
+- One form to insert data per model: Seller (console/admin), Customer (`/registro/`), Vehicle (seller panel), Sale (automatic on purchase).
+- Search form in DB: vehicle filters by model, type, and year.
+- Template inheritance via `base.html`.
+- MVT pattern with dedicated models, views, and templates.
 
-- **Adaptar templates y views para manejar imágenes:** 
-Todos los formularios (`Registro`, `Editar perfil`, `Crear/Editar Vehículo`) usan `enctype="multipart/form-data"` y reciben `request.FILES`.
+## 4. Extra features
+### Sellers
+- Seller dashboard (`/panel-vendedor/`) as a CBV with mixins.
+- Real-time filters by brand, model, and type.
+- Simplified listing with edit/delete and expandable detail (year, price, availability, photo).
+- Quick “+ Add Vehicle” shortcut next to filters.
+- Sales table with vehicle, customer, price, and date.
 
-- **Uso de mínimo 2 CBV:** 
-`PanelVendedorView` y `LoginViewEmail` son `Class-Based Views`.
+### Customers
+- Web registration with avatar and birthdate.
+- `/panel-cliente/` with purchase history and link to catalog to buy.
+- One-click purchase updates availability and dashboards.
 
-- **Uso de mínimo un mixin en una CBV:** 
-`VendorRequiredMixin` combinado con `LoginRequiredMixin` en `PanelVendedorView`.
+### Admin `/admin/`
+- Full CRUD for Vehicles, Sales, Sellers, and Customers.
+- Custom actions to toggle vehicle availability.
 
-- **Uso de mínimo un decorador en una función-based view:** 
-`@login_required` y validaciones con `HttpResponseForbidden` en `panel_cliente`, `comprar_vehiculo`, etc.
+## 5. Technical overview
+- **App type:** Django monolith with templates; no SPA or REST API layer.
+- **Backend:** Python 3.12, Django 5.2, Django ORM, custom user `Vendedor` (email as `USERNAME_FIELD`), `Cliente` profile.
+- **Frontend:** Django templates + Bootstrap 5 (CDN).
+- **Database:** SQLite by default.
+- **Media:** `ImageField` for vehicles and avatars; Pillow for image handling.
+- **Dependencies:** Django, Pillow, sqlparse, tzdata (see `requirements.txt`).
 
-- **Una vista de “inicio”:**
-  `concesionaria.views.inicio` en `/` renderiza `Inicio/inicio.html`.
+## 6. Architecture and structure
+- `TuPrimeraPagina/`: project config (settings, urls, wsgi/asgi).
+- `concesionaria/`: business logic (`Vehiculo`, `Venta`; catalog, purchase, vehicle CRUD; admin; templates).
+- `cuentas/`: auth and profiles (custom `Vendedor`, `Cliente`; dashboards as CBVs; forms and access mixins).
+- `templates/`: base layout `base.html` extended by all pages.
+- `media/`: sample avatars and vehicle photos checked in for demo.
+- `requirements.txt`: minimal development dependencies.
 
-- **Acceso a una vista “Acerca de mí” / “About”:** 
-`concesionaria.views.about` en `/about/` con plantilla `Acerca de mí`.
-
-- **Modelo principal con mín. 3 CharField, 1 ImageField, 1 DateField:** 
-El modelo `Vehiculo` tiene `marca`, `modelo`, `tipo` (CharFields), `foto` (ImageField) y `año` (IntegerField).
-
-- **Listado de objetos con búsqueda y mensaje si no hay resultados:** 
-`/vehiculos/` y panel de vendedor incluyen filtros por modelo, tipo y año y muestran mensaje si no hay resultados.
-
-- **Desde el listado: detalle, creación, edición y borrado:** 
-Enlaces a `crear_vehiculo`, `editar_vehiculo`, `eliminar_vehiculo` directamente desde las listas.
-
-- **Registrar en admin todos los modelos:** 
-`Vehiculo`, `Venta`, `Vendedor` y `Cliente` registrados en `admin.py`.
-
-- **Tener una app para autenticación:** 
-App `cuentas` separada con login, logout, registro, perfil y edición de perfil.
-
-- **Login / Logout / Registro de usuario:** 
-Vistas basadas en `LoginView`, `LogoutView` (con plantilla) y función `registro_cliente`.
-
-- **Registro pide username, email, password + avatar + fecha_nacimiento:** 
-`ClienteRegistroForm` solicita email, password, nombre, apellido, DNI, teléfono, avatar y fecha de nacimiento.
-
-- **Vista de perfil muestra nombre, apellido, email, avatar y fecha_nacimiento:** `
-perfil.html` despliega todos estos campos.
-
-- **Desde perfil: acceso a edición de datos + cambio de password:** 
-`editar_perfil.html` incluye formularios para datos, email/avatar y sección opcional de cambio de contraseña con toggle JS.
-
-- **Un formulario para insertar datos por cada modelo creado**: 
-debido a la logica de negocio planteada, cada clase se crea de una forma distinta
-  - Vendedor: creado por consola o admin.
-  - Cliente: formulario en `/registro/`.
-  - Vehiculo: formulario exclusivo en el panel de vendedor.
-  - Venta: se genera automáticamente al comprar un vehículo.
-
-- **Un formulario para buscar algo en la BD**:
-Búsqueda de vehículos por modelo, tipo y año en `/vehiculos/`.
-
-- **Uso de herencia de plantillas (HTML)**:
-  - `base.html` como plantilla base.
-  - Todas las secciones (`Inicio`, `Vehículos`, `PanelVendedor`, etc.) extienden esta base.
-  - Organización clara en subcarpetas: `templates/concesionaria/...`.
-
-- **Aplicación del patrón MVT (Model - View - Template)**:
-  - Models para Vendedor, Cliente, Vehiculo y Venta.
-  - Views específicas para cada función: registro, login, compra, carga.
-  - Templates bien estructurados y reutilizables con bloques `{% block %}`.
-
----
-
-## 👥 Roles y funcionalidades extra
-
-### Vendedores
-
-- **Panel de Vendedor** (`/panel-vendedor/`) implementado como CBV con mixins.  
-- **Filtros** en tiempo real por marca, modelo y tipo.  
-- **Listado** simplificado: _Modelo Marca – Tipo_.  
-- **Botones**:
-  - `✏️ Editar`
-  - `🗑️ Eliminar`
-  - `🔎 Ver más` despliega año, precio, disponibilidad y foto en un collapse.  
-- **Carga rápida**: `+ Agregar Vehículo` al lado de “🔍 Filtrar”.  
-- **Ventas realizadas**: tabla con vehículo, cliente, precio y fecha.  
-
-### Clientes
-
-- **Registro web** con avatar y fecha de nacimiento.  
-- **Panel de Cliente** (`/panel-cliente/`):
-  - Historial de compras con detalle de cada venta.  
-  - Enlace al catálogo `/vehiculos/` para filtrar y comprar.  
-- **Compra con un clic**: al comprar, se genera la venta, se marca el vehículo como no disponible y se actualizan ambos paneles.
-
----
-
-### 🛠 Panel de administración (`/admin/`)
-
-- Superusuario puede gestionar:
-  - Vehículos, Ventas, Vendedores y Clientes
-  - Acciones personalizadas: marcar vehículos como disponibles / no disponibles
-
----
-
-## 🛠 Tecnologías y librerías
-
-- **Python 3.12**, **Django 5.2**  
-- **Bootstrap 5** para estilos y componentes JS (collapse, grid).  
-- **Pillow** para el manejo de ImageFields (avatares, fotos de vehículos).  
-- **SQLite** como base de datos por defecto.  
-
----
-
-## 🚀 Instalación y puesta en marcha
-
-1. Clonar el repositorio y situarse en la carpeta del proyecto.  
-2. Crear y activar el virtualenv:
-
-    ```bash
-    python -m venv .venv
-    # Windows PowerShell
-    .\.venv\Scripts\Activate.ps1
-    # o Git Bash / WSL
-    source .venv/Scripts/activate
-    ```
-
-3. Instalar dependencias:
-
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-4. Migrar modelos:
-
-    ```bash
-    python manage.py makemigrations
-    python manage.py migrate
-    ```
-
-5. (Opcional) Crear superusuario:
-
-    ```bash
-    python manage.py createsuperuser
-    ```
-
-6. Levantar el servidor:
-
-    ```bash
-    python manage.py runserver
-    ```
-
----
-
-## ✅ Orden sugerido para probar
-
-1. Crear un superusuario e ingresar a `/admin/`.
-2. Crear un **vendedor** desde consola o admin:
-```python
-from concesionaria.models import Vendedor
-v = Vendedor.objects.create_user(email="vendedor@demo.com", password="clave1234", username="vendedor")
-```
-3. Iniciar sesión como vendedor y cargar vehículos.
-4. Registrar un cliente desde `/registro/`.
-5. Iniciar sesión como cliente y comprar un vehículo.
-6. Verificar que:
-   - El vehículo desaparece de la lista.
-   - Aparece en el historial del cliente.
-   - Aparece como vendido en el panel del vendedor.
-
----
-
-## 📂 Estructura de carpetas clave
-
+**Key folder structure**
 ```
 .
 ├── concesionaria/
@@ -209,22 +101,88 @@ v = Vendedor.objects.create_user(email="vendedor@demo.com", password="clave1234"
 │   ├── urls.py
 │   └── templates/cuentas/
 ├── media/
-├── static/
+├── templates/
+│   └── base.html
 ├── requirements.txt
-└── README.md
+├── manage.py
+└── README.md / README_ES.md
 ```
 
-## 📂 Estructura de templates
-
+**Template structure**
 - `base.html`
 - `templates/concesionaria/`
   - `Inicio/inicio.html`
   - `Vehiculos/vehiculos.html`, `crear_vehiculo.html`, `editar_vehiculo.html`, `confirmar_eliminar.html`
   - `QuienesSomos/quienes.html`
-  - `Acerca de mí/About.html`
+  - `Acerca de mi/About.html`
 - `templates/cuentas/`
   - `Login/login.html`
   - `Registro/registro.html`
   - `Perfil/perfil.html`
   - `Perfil/editar_perfil.html`
   - `Logout/logout.html`
+
+## 7. Installation & setup
+1) Clone the repo and move into the project directory.  
+2) Create and activate a virtualenv:
+```bash
+python -m venv .venv
+# PowerShell
+.\.venv\Scripts\Activate.ps1
+# Git Bash / WSL
+source .venv/Scripts/activate
+```
+3) Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+4) Run migrations:
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+5) (Optional) Create a superuser:
+```bash
+python manage.py createsuperuser
+```
+
+## 8. How to run
+```bash
+python manage.py runserver
+```
+Open `http://127.0.0.1:8000/` in your browser.
+
+## 9. Suggested test flow
+1. Create a superuser and log in to `/admin/`.  
+2. Create a seller via console/admin:
+   ```python
+   from concesionaria.models import Vendedor
+   v = Vendedor.objects.create_user(
+       email="vendedor@demo.com",
+       password="clave1234",
+       username="vendedor"
+   )
+   ```
+3. Log in as the seller and add vehicles.  
+4. Register a customer at `/registro/`.  
+5. Log in as the customer and purchase a vehicle.  
+6. Verify:
+   - The vehicle disappears from the available list.
+   - It appears in the customer's history.
+   - It appears as sold in the seller's panel.
+
+## 10. Environment configuration
+- Expected variables for deployment:
+  - `DJANGO_SECRET_KEY`: secret key (do not commit).
+  - `DJANGO_DEBUG`: set to `False` in production.
+  - `DJANGO_ALLOWED_HOSTS`: comma-separated list of allowed hosts.
+
+## 11. Tests
+No automated tests included (`concesionaria/tests.py` and `cuentas/tests.py` are empty).
+
+## 12. Future work
+- Add unit/integration tests for key flows (registration, purchase, dashboard permissions).
+- Harden production security (DEBUG=False, allowed hosts, CSRF/HTTPS).
+- Ensure sensitive actions (e.g., purchase) are POST-only with CSRF protection.
+- Normalize field names to ASCII (`año` → `anio`) for portability.
+- Provide Docker/Compose for setup and a CI pipeline for tests and linting.
