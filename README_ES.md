@@ -1,6 +1,6 @@
 Versión en inglés disponible en [README.md](README.md).
 
-# Concesionaria San Pedro — Aplicación web Django 🚗
+# Django-car-dealership — Aplicación web Django
 
 Aplicación web monolítica construida con Django para una concesionaria de vehículos. Gestiona flujos diferenciados para vendedores y clientes y ofrece un panel de administración para superusuarios. La UI se renderiza con templates de Django y estilos Bootstrap; no existe una SPA separada ni una API REST expuesta.
 

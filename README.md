@@ -1,6 +1,6 @@
 Spanish version available in [README_ES.md](README_ES.md).
 
-# San Pedro Dealership — Django Web App 🚗
+# Django-car-dealership — Django Web App
 
 Django monolith for a car dealership with distinct flows for sellers and customers, plus an admin panel for superusers. The UI is server-rendered with Django templates and Bootstrap; there is no separate SPA or exposed REST API.
 
